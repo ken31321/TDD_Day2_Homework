@@ -36,7 +36,7 @@ namespace TDD_Day2_Homework.Service.Tests
         }
 
         [TestMethod()]
-        public void 優惠促銷_第一集與第二集買了一本_其他都沒買_價格應為190元()
+        public void 優惠促銷_第一二集買了一本_其他都沒買_價格應為190元()
         {
             //Arrange
             List<Book> books = new List<Book>
@@ -95,6 +95,29 @@ namespace TDD_Day2_Homework.Service.Tests
             };
 
             var expected = 320;
+            var target = new ShoppingCartService();
+
+            //Act
+            int actual = target.CheckOut(books);
+
+            //aAsert
+            Assert.AreEqual(expected, actual);
+        }
+
+        [TestMethod()]
+        public void 優惠促銷_第一二三四五集各買了一本_其他都沒買_價格應為375元()
+        {
+            //Arrange
+            List<Book> books = new List<Book>
+            {
+                new Book {ID = 1, Name = "第一集", Price = 100, Quantity = 1 },
+                new Book {ID = 2, Name = "第二集", Price = 100, Quantity = 1 },
+                new Book {ID = 3, Name = "第三集", Price = 100, Quantity = 1 },
+                new Book {ID = 4, Name = "第四集", Price = 100, Quantity = 1 },
+                new Book {ID = 5, Name = "第五集", Price = 100, Quantity = 1 }
+            };
+
+            var expected = 375;
             var target = new ShoppingCartService();
 
             //Act
