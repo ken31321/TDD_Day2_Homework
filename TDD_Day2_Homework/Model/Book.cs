@@ -17,7 +17,12 @@ namespace TDD_Day2_Homework.Model
         /// 書籍名稱
         /// </summary>
         public string Name { get; set; }
-        
+
+        /// <summary>
+        /// 書籍售價
+        /// </summary>
+        public int Price { get; set; }
+
         /// <summary>
         /// 書籍數量
         /// </summary>

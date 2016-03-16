@@ -8,28 +8,28 @@ namespace TDD_Day2_Homework.Service
 {
     public class ShoppingCartService
     {
-        public int CheckOut(Order order)
+        public int CheckOut(List<Book> books)
         {
             //訂單總金額
             int totalAmount = 0;
 
-            //計算不同本書的數量
-            var otherBooks = order.OrderItem.Where(m => m.Quantity > 0).Select(m => m.ID);
-
             //計算折扣金額
-            totalAmount = CalculateDiscont(otherBooks.Count());
+            totalAmount = CalculateDiscont(books);
 
             return totalAmount;
         }
 
-        private int CalculateDiscont(int count)
+        private int CalculateDiscont(List<Book> books)
         {
-            //每本書的價格
-            int bookPrice = 100;
+            //計算不同書的數量
+            int otherbooks = books.Where(item => item.Quantity > 0)
+                                  .Select(item => item.ID)
+                                  .Distinct()
+                                  .Count();
 
             //打折乘數
             double multiplier = 1;
-            switch (count)
+            switch (otherbooks)
             {
                 /*
                 一種書: 不打折
@@ -53,12 +53,14 @@ namespace TDD_Day2_Homework.Service
                 case 5:
                     multiplier = 0.75;
                     break;
-                default:
-                    break;
             }
 
+            //書價總和
+            int sumPrice = books.Where(item => item.Quantity > 0)
+                                .Sum(item => item.Price);
+
             //打折後金額
-            int discountAmount = Convert.ToInt32(bookPrice * count * multiplier);
+            int discountAmount = Convert.ToInt32(Math.Round(sumPrice * multiplier, MidpointRounding.AwayFromZero));
 
             return discountAmount;
         }
