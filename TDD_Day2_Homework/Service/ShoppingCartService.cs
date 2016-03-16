@@ -21,48 +21,57 @@ namespace TDD_Day2_Homework.Service
 
         private int CalculateDiscont(List<Book> books)
         {
-            //計算不同書的數量
-            int otherbooks = books.Where(item => item.Quantity > 0)
-                                  .Select(item => item.ID)
-                                  .Distinct()
-                                  .Count();
+            int subAmount = 0;
 
-            //打折乘數
-            double multiplier = 1;
-            switch (otherbooks)
+            while (books.Where(item => item.Quantity > 0).Any())
             {
-                /*
-                一種書: 不打折
-                兩種書: 95折
-                三種書: 9折
-                四種書: 8折
-                五種書: 75折
-                */
-                case 1:
-                    multiplier = 1;
-                    break;
-                case 2:
-                    multiplier = 0.95;
-                    break;
-                case 3:
-                    multiplier = 0.9;
-                    break;
-                case 4:
-                    multiplier = 0.8;
-                    break;
-                case 5:
-                    multiplier = 0.75;
-                    break;
+                //計算不同書的數量
+                IEnumerable<int> ListOtherbook = books.Where(item => item.Quantity > 0)
+                                                    .Select(item => item.ID)
+                                                    .Distinct();
+
+                //打折乘數
+                double multiplier = 1;
+                switch (ListOtherbook.Count())
+                {
+                    /*
+                    一種書: 不打折
+                    兩種書: 95折
+                    三種書: 9折
+                    四種書: 8折
+                    五種書: 75折
+                    */
+                    case 1:
+                        multiplier = 1;
+                        break;
+                    case 2:
+                        multiplier = 0.95;
+                        break;
+                    case 3:
+                        multiplier = 0.9;
+                        break;
+                    case 4:
+                        multiplier = 0.8;
+                        break;
+                    case 5:
+                        multiplier = 0.75;
+                        break;
+                }
+
+                //書籍單價總和
+                int sumPrice = books.Where(item => item.Quantity > 0)
+                                    .Sum(item => item.Price);
+
+                //打折後金額
+                subAmount += Convert.ToInt32(Math.Round(sumPrice * multiplier, MidpointRounding.AwayFromZero));
+
+                foreach (var bookID in ListOtherbook)
+                {
+                    books.Where(item => item.ID == bookID).First().Quantity--;
+                }
             }
 
-            //書價總和
-            int sumPrice = books.Where(item => item.Quantity > 0)
-                                .Sum(item => item.Price);
-
-            //打折後金額
-            int discountAmount = Convert.ToInt32(Math.Round(sumPrice * multiplier, MidpointRounding.AwayFromZero));
-
-            return discountAmount;
+            return subAmount;
         }
 
     }
